@@ -5,29 +5,28 @@ import ru.netology.exceptions.CommentOwnerNotFoundException
 import ru.netology.exceptions.PostNotFoundException
 
 object WallService {
-    private var posts = emptyArray<Post>()
-    private var comments = emptyArray<Comment>()
-    private var reports = emptyArray<Report>()
+    private val posts = mutableListOf<Post>()
+    private val comments = mutableListOf<Comment>()
+    private val reports = mutableListOf<Report>()
 
     fun clear() {
-        posts = emptyArray()
-        comments = emptyArray()
+        posts.clear()
+        comments.clear()
     }
 
-    fun createComment(comment: Comment, postId: Int): Comment? {
-        val post: Post? = findPostById(postId)
+    fun createComment(comment: Comment, postId: Int): Comment {
+        val post: Post = findPostById(postId)
 
-        if (post != null) {
-            comments = post.comments?.comments ?: emptyArray()
-            val newComment = comment.copy(id = comments.lastIndex + 1)
-            comments += newComment
-            update(post.copy(comments = Comments(comments = comments)))
-            return newComment
-        }
-        return null
+        val postComments = post.comments?.comments ?: mutableListOf()
+        val newComment = comment.copy(id = comments.lastIndex + 1)
+
+        comments += newComment
+        postComments += newComment
+        update(post.copy(comments = Comments(comments = postComments)))
+        return newComment
     }
 
-    private fun findPostById(postId: Int): Post? {
+    private fun findPostById(postId: Int): Post {
         for (post: Post in posts) {
             if (post.id == postId) return post
         }
@@ -54,7 +53,7 @@ object WallService {
     }
 
     fun reportComment(report: Report): Boolean {
-        var ownerComments = emptyArray<Comment>()
+        val ownerComments = mutableListOf<Comment>()
 
         for (comment: Comment in comments) {
             if (comment.fromId == report.ownerId) {

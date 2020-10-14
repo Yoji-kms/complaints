@@ -94,15 +94,13 @@ class MainKtTest {
         wall.createComment(comment, post.id)
         val lastComment = wall.createComment(comment, post.id)
 
-        val result = if (lastComment != null) {
-            wall.reportComment(
-                Report(
-                    ownerId = lastComment.fromId,
-                    commentId = lastComment.id,
-                    reportReason = ReportReason.SPAM
-                )
+        val result = wall.reportComment(
+            Report(
+                ownerId = lastComment.fromId,
+                commentId = lastComment.id,
+                reportReason = ReportReason.SPAM
             )
-        } else false
+        )
 
         assertTrue(result)
     }
@@ -115,15 +113,13 @@ class MainKtTest {
         val post = wall.add(Post())
         val comment = wall.createComment(Comment(), post.id)
 
-        if (comment != null) {
-            wall.reportComment(
-                Report(
-                    ownerId = comment.fromId,
-                    commentId = comment.id + 1,
-                    reportReason = ReportReason.ABUSE
-                )
+        wall.reportComment(
+            Report(
+                ownerId = comment.fromId,
+                commentId = comment.id + 1,
+                reportReason = ReportReason.ABUSE
             )
-        }
+        )
     }
 
     @Test(expected = CommentOwnerNotFoundException::class)
@@ -134,14 +130,12 @@ class MainKtTest {
         val post = wall.add(Post())
         val comment = wall.createComment(Comment(), post.id)
 
-        if (comment != null) {
-            wall.reportComment(
-                Report(
-                    ownerId = comment.fromId + 1,
-                    commentId = comment.id,
-                    reportReason = ReportReason.VIOLENCE
-                )
+        wall.reportComment(
+            Report(
+                ownerId = comment.fromId + 1,
+                commentId = comment.id,
+                reportReason = ReportReason.VIOLENCE
             )
-        }
+        )
     }
 }

@@ -5,7 +5,7 @@ data class Comments(
     val groupsCanPost: Boolean = true,
     val canClose: Boolean = true,
     val canOpen: Boolean = true,
-    val comments: Array<Comment> = emptyArray()
+    val comments: MutableList<Comment> = mutableListOf()
 ){
     val count: Int = comments.size
 }
